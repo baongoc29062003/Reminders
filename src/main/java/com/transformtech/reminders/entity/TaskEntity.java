@@ -3,7 +3,7 @@ package com.transformtech.reminders.entity;
 import jakarta.persistence.*;
 
 import java.util.List;
-
+// Thiếu constructor ở entity
 @Entity
 @Table(name ="task_list")
 public class TaskEntity extends BaseEntity {

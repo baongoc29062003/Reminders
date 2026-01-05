@@ -22,7 +22,7 @@ public class TaskDetailAPI {
     public TaskDetailDTO createTaskDetail(@RequestBody TaskDetailDTO taskDetailDTO) {
         return taskDetailService.saveTaskDetail(taskDetailDTO);
     }
-
+//api put, delete cho truyền id vào qua url
     @PutMapping("api/taskdetail")
     public TaskDetailDTO updateTaskDetail(@RequestBody TaskDetailDTO taskDetailDTO) {
         return taskDetailService.saveTaskDetail(taskDetailDTO);

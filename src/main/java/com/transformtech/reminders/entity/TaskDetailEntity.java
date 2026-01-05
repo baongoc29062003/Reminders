@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+// Thiếu constructor ở entity
 @Entity
 @Table(name="task_detail")
 public class TaskDetailEntity extends BaseEntity {
