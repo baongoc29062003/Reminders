@@ -1,4 +1,5 @@
 package com.transformtech.reminders.service.impl;
+
 import com.transformtech.reminders.dto.TaskDTO;
 import com.transformtech.reminders.dto.TaskListDTO;
 import com.transformtech.reminders.dto.TaskOverViewDTO;
@@ -12,6 +13,7 @@ import com.transformtech.reminders.service.ITaskListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,17 +69,13 @@ public class TaskListService implements ITaskListService {
     @Override
     @Transactional
     public void deleteTaskList(Long[] ids) {
-        Arrays.stream(ids).forEach(id -> taskDetailRepository.deleteByTaskId(id));
         Arrays.stream(ids).forEach(id -> taskListRepository.deleteById(id));
     }
 
     @Override
     @Transactional
     public void deleteAllTaskList() {
-        taskDetailRepository.deleteAll();
-        if (taskDetailRepository.findAll().isEmpty()) {
             taskListRepository.deleteAll();
-        }
     }
 
     @Override
