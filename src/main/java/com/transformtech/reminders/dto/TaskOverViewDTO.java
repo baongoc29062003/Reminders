@@ -1,27 +1,15 @@
 package com.transformtech.reminders.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TaskOverViewDTO {
     private long totalTaskItem;
     List<TaskListDTO> taskListDTOS;
 
-    public long getTotalTaskItem() {
-        return totalTaskItem;
-    }
-
-    public void setTotalTaskItem(long totalTaskItem) {
-        this.totalTaskItem = totalTaskItem;
-    }
-
-    public List<TaskListDTO> getTaskListDTOS() {
-        return taskListDTOS;
-    }
-
-    public void setTaskListDTOS(List<TaskListDTO> taskListDTOS) {
-        this.taskListDTOS = taskListDTOS;
-    }
 }

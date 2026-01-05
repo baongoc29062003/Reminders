@@ -28,15 +28,14 @@ public class TaskDetailService implements ITaskDetailService {
     @Override
     public TaskDetailDTO saveTaskDetail(TaskDetailDTO taskDetailDTO) {
         TaskDetailEntity taskDetailEntity;
-        if(taskDetailDTO.getId() != null) {
+        if (taskDetailDTO.getId() != null) {
             TaskDetailEntity oldTaskDetail = taskDetailRepository.findById(taskDetailDTO.getId()).orElseThrow();
             taskDetailEntity = taskDetailMapper.updateToEntity(taskDetailDTO, oldTaskDetail);
-        }
-        else {
+        } else {
             taskDetailEntity = taskDetailMapper.toEntity(taskDetailDTO);
         }
-            taskDetailRepository.save(taskDetailEntity);
-            TaskDetailDTO result = taskDetailMapper.toDTO(taskDetailEntity);
+        taskDetailRepository.save(taskDetailEntity);
+        TaskDetailDTO result = taskDetailMapper.toDTO(taskDetailEntity);
         return result;
     }
 
@@ -53,10 +52,10 @@ public class TaskDetailService implements ITaskDetailService {
     @Override
     public TaskDetailDTO findById(Long id) {
 
-            TaskDetailEntity taskDetailEntity = taskDetailRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy id"));
-            TaskDetailDTO result = taskDetailMapper.toDTO(taskDetailEntity);
-            return result;
+        TaskDetailEntity taskDetailEntity = taskDetailRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy id"));
+        TaskDetailDTO result = taskDetailMapper.toDTO(taskDetailEntity);
+        return result;
 
     }
 

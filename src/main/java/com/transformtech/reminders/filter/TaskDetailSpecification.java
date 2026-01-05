@@ -1,8 +1,8 @@
 package com.transformtech.reminders.filter;
 
 import com.transformtech.reminders.entity.TaskDetailEntity;
-import com.transformtech.reminders.enun.Priority;
-import com.transformtech.reminders.enun.Status;
+import com.transformtech.reminders.enums.Priority;
+import com.transformtech.reminders.enums.Status;
 import org.springframework.data.jpa.domain.Specification;
 
 public class TaskDetailSpecification {
@@ -19,6 +19,7 @@ public class TaskDetailSpecification {
             return cb.equal(root.get("status"), status);
         };
     }
+
     public static Specification<TaskDetailEntity> hasPriority(Priority priority) {
         return (root, query, cb) -> {
             if (priority == null) return null;

@@ -1,8 +1,7 @@
 package com.transformtech.reminders.filter;
 
-import com.transformtech.reminders.entity.TaskDetailEntity;
-import com.transformtech.reminders.enun.Priority;
-import com.transformtech.reminders.enun.Status;
+import com.transformtech.reminders.enums.Priority;
+import com.transformtech.reminders.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -3,12 +3,15 @@ package com.transformtech.reminders.dto;
 
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskDetailDTO extends AbstractDTO {
     @NotNull(message = "Không được bỏ trống")
     private String taskItem;
