@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ public class TaskDetailService implements ITaskDetailService {
 
 
     @Override
+    @Transactional
     public TaskDetailDTO saveTaskDetail(TaskDetailDTO taskDetailDTO) {
         TaskDetailEntity taskDetailEntity;
         if (taskDetailDTO.getId() != null) {
@@ -42,11 +44,13 @@ public class TaskDetailService implements ITaskDetailService {
     }
 
     @Override
+    @Transactional
     public void deleteTaskDetail(Long[] ids) {
         Arrays.stream(ids).forEach(id -> taskDetailRepository.deleteById(id));
     }
 
     @Override
+    @Transactional
     public void deleteAllTaskDetail() {
         taskDetailRepository.deleteAll();
     }

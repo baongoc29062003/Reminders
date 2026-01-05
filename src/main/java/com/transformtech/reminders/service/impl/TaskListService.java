@@ -54,6 +54,7 @@ public class TaskListService implements ITaskListService {
     }
 
     @Override
+    @Transactional
     public TaskDTO updateTaskList(TaskDTO taskDTO) {
         TaskEntity oldTask = taskListRepository.findById(taskDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Không thấy bản ghi cũ"));
