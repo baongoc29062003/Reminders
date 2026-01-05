@@ -3,12 +3,20 @@ package com.transformtech.reminders.entity;
 import com.transformtech.reminders.enums.Priority;
 import com.transformtech.reminders.enums.Status;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 @Table(name="task_detail")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TaskDetailEntity extends BaseEntity {
     @Column(name ="taskitem", columnDefinition = "TEXT", nullable = false)
     private String taskItem;
@@ -32,59 +40,5 @@ public class TaskDetailEntity extends BaseEntity {
     @Column
     private Priority priority;
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getTaskItem() {
-        return taskItem;
-    }
-
-    public void setTaskItem(String taskItem) {
-        this.taskItem = taskItem;
-    }
-
-    public LocalDate getExecutionDate() {
-        return executionDate;
-    }
-
-    public void setExecutionDate(LocalDate executionDate) {
-        this.executionDate = executionDate;
-    }
-
-    public LocalTime getExecutionTime() {
-        return executionTime;
-    }
-
-    public void setExecutionTime(LocalTime executionTime) {
-        this.executionTime = executionTime;
-    }
-
-    public TaskEntity getTasklist() {
-        return tasklist;
-    }
-
-    public void setTasklist(TaskEntity tasklist) {
-        this.tasklist = tasklist;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
 }

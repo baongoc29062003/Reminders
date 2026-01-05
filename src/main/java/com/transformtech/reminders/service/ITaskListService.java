@@ -9,7 +9,7 @@ import java.util.List;
 public interface ITaskListService {
     List<TaskDTO> findListTask();
     TaskDTO saveTaskList(TaskDTO taskListDTO);
-    TaskDTO updateTaskList(TaskDTO taskDTO);
+    TaskDTO updateTaskList(TaskDTO taskDTO, Long id);
     void deleteTaskList(Long[] ids);
     void deleteAllTaskList();
     TaskListDTO getTaskListById(Long id);

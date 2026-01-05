@@ -34,13 +34,14 @@ public class TaskListAPI {
         return taskListService.saveTaskList(taskListDTO);
     }
 
-    @PutMapping("/api/tasklist")
-    public TaskDTO updateTaskList(@RequestBody TaskDTO taskListDTO) {
-        return taskListService.updateTaskList(taskListDTO);
+    @PutMapping("/api/tasklist/{id}")
+    public TaskDTO updateTaskList(@PathVariable Long id,
+                                  @RequestBody TaskDTO taskListDTO) {
+        return taskListService.updateTaskList(taskListDTO,id);
     }
 
-    @DeleteMapping("/api/tasklist")
-    void deleteTasklist(@RequestBody Long[] ids) {
+    @DeleteMapping("/api/tasklist/{ids}")
+    void deleteTasklist(@RequestParam(value = "ids") Long[] ids) {
         taskListService.deleteTaskList(ids);
     }
 

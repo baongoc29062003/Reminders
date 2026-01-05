@@ -4,12 +4,11 @@ import com.transformtech.reminders.dto.TaskDTO;
 import com.transformtech.reminders.dto.TaskListDTO;
 import com.transformtech.reminders.dto.TaskOverViewDTO;
 import com.transformtech.reminders.entity.TaskEntity;
-import com.transformtech.reminders.exception.ResourceNotFoundException;
-import com.transformtech.reminders.mapper.TaskDetailMapper;
 import com.transformtech.reminders.mapper.TaskMapper;
-import com.transformtech.reminders.repositoty.TaskDetailRepository;
-import com.transformtech.reminders.repositoty.TaskListRepository;
+import com.transformtech.reminders.repository.TaskDetailRepository;
+import com.transformtech.reminders.repository.TaskListRepository;
 import com.transformtech.reminders.service.ITaskListService;
+import com.transformtech.reminders.validate.TaskValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +27,12 @@ public class TaskListService implements ITaskListService {
     @Autowired
     TaskDetailRepository taskDetailRepository;
 
-
     @Autowired
-    private TaskDetailMapper taskDetailMapper;
+    private TaskValidate taskValidate;
+
 
     @Override
+    @Transactional(readOnly = true)
     public List<TaskDTO> findListTask() {
         List<TaskEntity> taskListEntity = taskListRepository.findAll();
         List<TaskDTO> taskListDTO = taskListMapper.toDTOs(taskListEntity);
@@ -47,9 +47,7 @@ public class TaskListService implements ITaskListService {
     @Override
     @Transactional
     public TaskDTO saveTaskList(TaskDTO taskListDTO) {
-        TaskEntity taskListEntity = new TaskEntity();
-
-        taskListEntity = taskListMapper.toEntity(taskListDTO);
+        TaskEntity taskListEntity = taskListMapper.toEntity(taskListDTO);
         taskListEntity = taskListRepository.save(taskListEntity);
         TaskDTO result = taskListMapper.toDTO(taskListEntity);
         return result;
@@ -57,9 +55,8 @@ public class TaskListService implements ITaskListService {
 
     @Override
     @Transactional
-    public TaskDTO updateTaskList(TaskDTO taskDTO) {
-        TaskEntity oldTask = taskListRepository.findById(taskDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Không thấy bản ghi cũ"));
+    public TaskDTO updateTaskList(TaskDTO taskDTO,Long id) {
+        TaskEntity oldTask = taskValidate.validateTaskUpdate(id);
         oldTask = taskListMapper.updateEntity(oldTask, taskDTO);
         taskListRepository.save(oldTask);
         TaskDTO result = taskListMapper.toDTO(oldTask);
@@ -79,6 +76,7 @@ public class TaskListService implements ITaskListService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TaskListDTO getTaskListById(Long id) {
         TaskEntity taskEntity = taskListRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy id"));
@@ -88,6 +86,7 @@ public class TaskListService implements ITaskListService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TaskOverViewDTO getAllTaskList() {
         TaskOverViewDTO taskOverViewDTO = new TaskOverViewDTO();
         taskOverViewDTO.setTotalTaskItem(taskDetailRepository.count());

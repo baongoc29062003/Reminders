@@ -1,4 +1,4 @@
-package com.transformtech.reminders.repositoty;
+package com.transformtech.reminders.repository;
 
 import com.transformtech.reminders.entity.TaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

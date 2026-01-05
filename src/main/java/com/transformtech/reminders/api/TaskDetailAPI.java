@@ -23,13 +23,14 @@ public class TaskDetailAPI {
         return taskDetailService.saveTaskDetail(taskDetailDTO);
     }
 
-    @PutMapping("api/taskdetail")
-    public TaskDetailDTO updateTaskDetail(@RequestBody TaskDetailDTO taskDetailDTO) {
-        return taskDetailService.saveTaskDetail(taskDetailDTO);
+    @PatchMapping("api/taskdetail/{id}")
+    public TaskDetailDTO updateTaskDetail(@PathVariable Long id,
+                                          @RequestBody TaskDetailDTO taskDetailDTO) {
+        return taskDetailService.updateTaskDetail(taskDetailDTO,id);
     }
 
-    @DeleteMapping("/api/taskdetail")
-    public void deleteTaskDetail(@RequestBody Long[] ids) {
+    @DeleteMapping("/api/taskdetail/{ids}")
+    public void deleteTaskDetail(@RequestParam(value = "ids") Long[] ids) {
         taskDetailService.deleteTaskDetail(ids);
     }
 

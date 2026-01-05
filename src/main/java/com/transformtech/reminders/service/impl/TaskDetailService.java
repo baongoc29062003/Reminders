@@ -6,8 +6,9 @@ import com.transformtech.reminders.exception.ResourceNotFoundException;
 import com.transformtech.reminders.filter.TaskDetailFilter;
 import com.transformtech.reminders.filter.TaskDetailSpecification;
 import com.transformtech.reminders.mapper.TaskDetailMapper;
-import com.transformtech.reminders.repositoty.TaskDetailRepository;
+import com.transformtech.reminders.repository.TaskDetailRepository;
 import com.transformtech.reminders.service.ITaskDetailService;
+import com.transformtech.reminders.validate.TaskDetailValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,21 +28,26 @@ public class TaskDetailService implements ITaskDetailService {
     @Autowired
     private TaskDetailMapper taskDetailMapper;
 
+    @Autowired
+    private TaskDetailValidate taskDetailValidate;
 
     @Override
     @Transactional
     public TaskDetailDTO saveTaskDetail(TaskDetailDTO taskDetailDTO) {
-        TaskDetailEntity taskDetailEntity;
-        if (taskDetailDTO.getId() != null) {
-            TaskDetailEntity oldTaskDetail = taskDetailRepository.findById(taskDetailDTO.getId()).orElseThrow();
-            taskDetailEntity = taskDetailMapper.updateToEntity(taskDetailDTO, oldTaskDetail);
-        } else {
-            taskDetailEntity = taskDetailMapper.toEntity(taskDetailDTO);
-        }
+        TaskDetailEntity taskDetailEntity = taskDetailMapper.toEntity(taskDetailDTO);
         taskDetailRepository.save(taskDetailEntity);
         TaskDetailDTO result = taskDetailMapper.toDTO(taskDetailEntity);
         return result;
     }
+
+    @Override
+    public TaskDetailDTO updateTaskDetail(TaskDetailDTO taskDetailDTO, Long id) {
+        TaskDetailEntity oldTaskDetailEntity = taskDetailValidate.validateTaskDetailUpdate(id);
+        oldTaskDetailEntity = taskDetailMapper.updateToEntity(taskDetailDTO, oldTaskDetailEntity);
+        TaskDetailDTO result = taskDetailMapper.toDTO(oldTaskDetailEntity);
+        return result;
+    }
+
 
     @Override
     @Transactional
@@ -56,6 +62,7 @@ public class TaskDetailService implements ITaskDetailService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TaskDetailDTO findById(Long id) {
 
         TaskDetailEntity taskDetailEntity = taskDetailRepository.findById(id)
@@ -66,6 +73,7 @@ public class TaskDetailService implements ITaskDetailService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TaskDetailDTO> findByExcutionDate() {
         LocalDate today = LocalDate.now();
         List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findByExecutionDate(today);
@@ -74,6 +82,7 @@ public class TaskDetailService implements ITaskDetailService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<TaskDetailDTO> search(TaskDetailFilter filter, Pageable pageable) {
         Specification<TaskDetailEntity> spec = Specification
                 .where(TaskDetailSpecification.titleContains(filter.getQ()))
