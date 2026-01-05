@@ -41,9 +41,11 @@ public class TaskDetailService implements ITaskDetailService {
     }
 
     @Override
+    @Transactional
     public TaskDetailDTO updateTaskDetail(TaskDetailDTO taskDetailDTO, Long id) {
         TaskDetailEntity oldTaskDetailEntity = taskDetailValidate.validateTaskDetailUpdate(id);
         oldTaskDetailEntity = taskDetailMapper.updateToEntity(taskDetailDTO, oldTaskDetailEntity);
+        taskDetailRepository.save(oldTaskDetailEntity);
         TaskDetailDTO result = taskDetailMapper.toDTO(oldTaskDetailEntity);
         return result;
     }
