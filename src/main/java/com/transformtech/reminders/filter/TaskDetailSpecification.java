@@ -4,7 +4,7 @@ import com.transformtech.reminders.entity.TaskDetailEntity;
 import com.transformtech.reminders.enums.Priority;
 import com.transformtech.reminders.enums.Status;
 import org.springframework.data.jpa.domain.Specification;
-
+//Nên tạo thêm 1 package riêng để chứa mấy cái specification
 public class TaskDetailSpecification {
     public static Specification<TaskDetailEntity> titleContains(String q) {
         return (root, query, cb) -> {

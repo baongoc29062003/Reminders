@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-
+// Thiếu constructor ở entity
 @Entity
 @Table(name ="task_list")
 @Setter

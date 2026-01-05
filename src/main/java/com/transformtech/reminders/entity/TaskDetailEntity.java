@@ -10,7 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+// Thiếu constructor ở entity
 @Entity
 @Table(name="task_detail")
 @Getter
