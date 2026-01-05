@@ -9,6 +9,8 @@ import com.transformtech.reminders.mapper.TaskDetailMapper;
 import com.transformtech.reminders.repositoty.TaskDetailRepository;
 import com.transformtech.reminders.service.ITaskDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -68,13 +70,13 @@ public class TaskDetailService implements ITaskDetailService {
     }
 
     @Override
-    public List<TaskDetailDTO> search(TaskDetailFilter filter) {
+    public Page<TaskDetailDTO> search(TaskDetailFilter filter, Pageable pageable) {
         Specification<TaskDetailEntity> spec = Specification
                 .where(TaskDetailSpecification.titleContains(filter.getQ()))
                 .and(TaskDetailSpecification.hasStatus(filter.getStatus()))
                 .and(TaskDetailSpecification.hasPriority(filter.getPriority()));
-        List<TaskDetailEntity> taskDetailEntity = taskDetailRepository.findAll(spec);
-        List<TaskDetailDTO> taskDetailDTO = taskDetailMapper.toDTOs(taskDetailEntity);
+        Page<TaskDetailEntity> taskDetailEntity = taskDetailRepository.findAll(spec, pageable);
+        Page<TaskDetailDTO> taskDetailDTO = taskDetailEntity.map(taskDetailMapper::toDTO);
         return taskDetailDTO;
     }
 }

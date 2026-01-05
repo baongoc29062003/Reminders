@@ -6,6 +6,9 @@ import com.transformtech.reminders.enums.Status;
 import com.transformtech.reminders.filter.TaskDetailFilter;
 import com.transformtech.reminders.service.ITaskDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,12 +49,14 @@ public class TaskDetailAPI {
     }
 
     @GetMapping("/api/taskdetail/filter")
-    public List<TaskDetailDTO> getTaskDetailFilter(@RequestParam(required = false) String q,
+    public Page<TaskDetailDTO> getTaskDetailFilter(@RequestParam(required = false) String q,
                                                    @RequestParam(required = false) Status status,
-                                                   @RequestParam(required = false) Priority priority) {
+                                                   @RequestParam(required = false) Priority priority,
+                                                   @RequestParam(required = false)  int limit,
+                                                   @RequestParam(required = false)  int offset) {
+        Pageable pageable =  PageRequest.of(offset, limit);
         TaskDetailFilter filter = new TaskDetailFilter(q, status, priority);
-
-        return taskDetailService.search(filter);
+        return taskDetailService.search(filter,pageable );
     }
 
 }
