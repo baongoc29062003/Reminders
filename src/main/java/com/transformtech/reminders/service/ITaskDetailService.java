@@ -1,9 +1,8 @@
 package com.transformtech.reminders.service;
 
-import com.transformtech.reminders.dto.PageResp;
+import com.transformtech.reminders.resp.PageResp;
 import com.transformtech.reminders.dto.TaskDetailDTO;
 import com.transformtech.reminders.filter.TaskDetailFilter;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

@@ -1,9 +1,8 @@
 package com.transformtech.reminders.service.impl;
 
-import com.transformtech.reminders.dto.PageResp;
+import com.transformtech.reminders.resp.PageResp;
 import com.transformtech.reminders.dto.TaskDetailDTO;
 import com.transformtech.reminders.entity.TaskDetailEntity;
-import com.transformtech.reminders.exception.ResourceNotFoundException;
 import com.transformtech.reminders.filter.TaskDetailFilter;
 import com.transformtech.reminders.spec.TaskDetailSpecification;
 import com.transformtech.reminders.mapper.TaskDetailMapper;

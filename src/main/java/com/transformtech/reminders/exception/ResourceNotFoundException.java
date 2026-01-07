@@ -1,11 +1,15 @@
 package com.transformtech.reminders.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.transformtech.reminders.enums.ErrorCode;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
+
 public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) {
-        super(message);
+    private final ErrorCode errorCode;
+    public ResourceNotFoundException(ErrorCode error) {
+        super(error.getMessage());
+        this.errorCode = error;
+    }
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 }

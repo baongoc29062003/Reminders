@@ -1,6 +1,7 @@
 package com.transformtech.reminders.validate;
 
 import com.transformtech.reminders.entity.TaskDetailEntity;
+import com.transformtech.reminders.enums.ErrorCode;
 import com.transformtech.reminders.exception.ResourceNotFoundException;
 import com.transformtech.reminders.repository.TaskDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class TaskDetailValidate {
 
     public TaskDetailEntity validateTaskDetailUpdate(Long id) {
         TaskDetailEntity taskDetailEntity = taskDetailRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Không thấy bản ghi cũ"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.TASK_DETAIL_NOT_FOUND));
         return taskDetailEntity;
     }
 }

@@ -1,10 +1,8 @@
-package com.transformtech.reminders.dto;
+package com.transformtech.reminders.resp;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
