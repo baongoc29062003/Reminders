@@ -4,12 +4,13 @@ import com.transformtech.reminders.dto.TaskDetailDTO;
 import com.transformtech.reminders.entity.TaskDetailEntity;
 import com.transformtech.reminders.exception.ResourceNotFoundException;
 import com.transformtech.reminders.filter.TaskDetailFilter;
-import com.transformtech.reminders.filter.TaskDetailSpecification;
+import com.transformtech.reminders.spec.TaskDetailSpecification;
 import com.transformtech.reminders.mapper.TaskDetailMapper;
 import com.transformtech.reminders.repository.TaskDetailRepository;
 import com.transformtech.reminders.service.ITaskDetailService;
 import com.transformtech.reminders.validate.TaskDetailValidate;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,77 +22,97 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class TaskDetailService implements ITaskDetailService {
-    @Autowired
-    private TaskDetailRepository taskDetailRepository;
+    private final TaskDetailRepository taskDetailRepository;
 
-    @Autowired
-    private TaskDetailMapper taskDetailMapper;
+    private final TaskDetailMapper taskDetailMapper;
 
-    @Autowired
-    private TaskDetailValidate taskDetailValidate;
+    private final TaskDetailValidate taskDetailValidate;
 
     @Override
     @Transactional
     public TaskDetailDTO saveTaskDetail(TaskDetailDTO taskDetailDTO) {
+        log.debug("Saving task detail: {}", taskDetailDTO);
         TaskDetailEntity taskDetailEntity = taskDetailMapper.toEntity(taskDetailDTO);
         taskDetailRepository.save(taskDetailEntity);
-        TaskDetailDTO result = taskDetailMapper.toDTO(taskDetailEntity);
-        return result;
+        return taskDetailMapper.toDTO(taskDetailEntity);
     }
 
     @Override
     @Transactional
     public TaskDetailDTO updateTaskDetail(TaskDetailDTO taskDetailDTO, Long id) {
+        log.debug("Updating task detail: {}", taskDetailDTO);
         TaskDetailEntity oldTaskDetailEntity = taskDetailValidate.validateTaskDetailUpdate(id);
         oldTaskDetailEntity = taskDetailMapper.updateToEntity(taskDetailDTO, oldTaskDetailEntity);
         taskDetailRepository.save(oldTaskDetailEntity);
-        TaskDetailDTO result = taskDetailMapper.toDTO(oldTaskDetailEntity);
-        return result;
+        return taskDetailMapper.toDTO(oldTaskDetailEntity);
     }
 
 
     @Override
     @Transactional
     public void deleteTaskDetail(Long[] ids) {
-        Arrays.stream(ids).forEach(id -> taskDetailRepository.deleteById(id));
+        log.debug("Deleting task details: {}", Arrays.asList(ids));
+        List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllById(Arrays.asList(ids));
+        taskDetailEntities
+                .stream()
+                .forEach(taskDetailEntity ->
+                {
+                    taskDetailEntity.setActive(false);
+                    taskDetailRepository.save(taskDetailEntity);
+                });
     }
 
     @Override
     @Transactional
     public void deleteAllTaskDetail() {
-        taskDetailRepository.deleteAll();
+        log.debug("Deleting all task details");
+        List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllByIsActiveTrue();
+        taskDetailEntities
+                .stream()
+                .forEach(taskDetailEntity ->
+                {
+                    taskDetailEntity.setActive(false);
+                    taskDetailRepository.save(taskDetailEntity);
+                });
     }
 
     @Override
     @Transactional(readOnly = true)
     public TaskDetailDTO findById(Long id) {
-
-        TaskDetailEntity taskDetailEntity = taskDetailRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy id"));
-        TaskDetailDTO result = taskDetailMapper.toDTO(taskDetailEntity);
-        return result;
-
+        log.debug("Finding task detail: {}", id);
+        TaskDetailEntity taskDetailEntity = taskDetailValidate.validateTaskDetailUpdate(id);
+        if (taskDetailEntity.isActive() == true) {
+            return taskDetailMapper.toDTO(taskDetailEntity);
+        }
+        throw new RuntimeException("Task detail not found");
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<TaskDetailDTO> findByExcutionDate() {
+        log.debug("Finding task details by excution date");
         LocalDate today = LocalDate.now();
         List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findByExecutionDate(today);
-        List<TaskDetailDTO> taskDetailDTO = taskDetailMapper.toDTOs(taskDetailEntities);
-        return taskDetailDTO;
+        List<TaskDetailEntity> activeEntity = taskDetailEntities
+                .stream()
+                .filter(TaskDetailEntity::isActive)
+                .toList();
+        return taskDetailMapper.toDTOs(activeEntity);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<TaskDetailDTO> search(TaskDetailFilter filter, Pageable pageable) {
+        log.debug("Searching task details for filter: {}", filter);
         Specification<TaskDetailEntity> spec = Specification
-                .where(TaskDetailSpecification.titleContains(filter.getQ()))
+                .where(TaskDetailSpecification.isActive())
+                .and(TaskDetailSpecification.titleContains(filter.getQ()))
                 .and(TaskDetailSpecification.hasStatus(filter.getStatus()))
                 .and(TaskDetailSpecification.hasPriority(filter.getPriority()));
         Page<TaskDetailEntity> taskDetailEntity = taskDetailRepository.findAll(spec, pageable);
-        Page<TaskDetailDTO> taskDetailDTO = taskDetailEntity.map(taskDetailMapper::toDTO);
-        return taskDetailDTO;
+        return taskDetailEntity.map(taskDetailMapper::toDTO);
     }
 }

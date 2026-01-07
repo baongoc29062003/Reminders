@@ -18,6 +18,9 @@ public class TaskEntity extends BaseEntity {
     @Column
     private String name;
 
+    @Column
+    private boolean isActive = true;
+
     @OneToMany(mappedBy = "tasklist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TaskDetailEntity> taskDetails;
 

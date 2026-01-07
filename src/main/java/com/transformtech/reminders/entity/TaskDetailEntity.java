@@ -27,6 +27,8 @@ public class TaskDetailEntity extends BaseEntity {
     @Column(name ="executiontime")
     private LocalTime executionTime;
 
+    @Column
+    private boolean isActive = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="tasklist_id" , nullable = false)
