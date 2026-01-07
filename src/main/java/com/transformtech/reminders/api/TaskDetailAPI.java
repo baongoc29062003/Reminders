@@ -1,5 +1,6 @@
 package com.transformtech.reminders.api;
 
+import com.transformtech.reminders.dto.PageResp;
 import com.transformtech.reminders.dto.TaskDetailDTO;
 import com.transformtech.reminders.enums.Priority;
 import com.transformtech.reminders.enums.Status;
@@ -57,11 +58,11 @@ public class TaskDetailAPI {
     }
 
     @GetMapping("/api/taskdetail/filter")
-    public Page<TaskDetailDTO> getTaskDetailFilter(@RequestParam(required = false) String q,
-                                                   @RequestParam(required = false) Status status,
-                                                   @RequestParam(required = false) Priority priority,
-                                                   @RequestParam(required = false)  int limit,
-                                                   @RequestParam(required = false)  int offset) {
+    public PageResp<TaskDetailDTO> getTaskDetailFilter(@RequestParam(required = false) String q,
+                                                       @RequestParam(required = false) Status status,
+                                                       @RequestParam(required = false) Priority priority,
+                                                       @RequestParam(required = false)  int limit,
+                                                       @RequestParam(required = false)  int offset) {
         log.info("Getting task detail filter: {}", q);
         Pageable pageable =  PageRequest.of(offset, limit);
         TaskDetailFilter filter = new TaskDetailFilter(q, status, priority);

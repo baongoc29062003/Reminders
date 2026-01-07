@@ -1,5 +1,6 @@
 package com.transformtech.reminders.service.impl;
 
+import com.transformtech.reminders.dto.PageResp;
 import com.transformtech.reminders.dto.TaskDetailDTO;
 import com.transformtech.reminders.entity.TaskDetailEntity;
 import com.transformtech.reminders.exception.ResourceNotFoundException;
@@ -105,14 +106,14 @@ public class TaskDetailService implements ITaskDetailService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TaskDetailDTO> search(TaskDetailFilter filter, Pageable pageable) {
+    public PageResp<TaskDetailDTO> search(TaskDetailFilter filter, Pageable pageable) {
         log.debug("Searching task details for filter: {}", filter);
         Specification<TaskDetailEntity> spec = Specification
                 .where(TaskDetailSpecification.isActive())
                 .and(TaskDetailSpecification.titleContains(filter.getQ()))
                 .and(TaskDetailSpecification.hasStatus(filter.getStatus()))
                 .and(TaskDetailSpecification.hasPriority(filter.getPriority()));
-        Page<TaskDetailEntity> taskDetailEntity = taskDetailRepository.findAll(spec, pageable);
-        return taskDetailEntity.map(taskDetailMapper::toDTO);
+        Page<TaskDetailDTO> taskDetailEntity = taskDetailRepository.findAll(spec, pageable).map(taskDetailMapper::toDTO);
+        return new PageResp<TaskDetailDTO>(taskDetailEntity);
     }
 }

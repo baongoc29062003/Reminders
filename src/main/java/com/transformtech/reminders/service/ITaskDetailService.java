@@ -1,5 +1,6 @@
 package com.transformtech.reminders.service;
 
+import com.transformtech.reminders.dto.PageResp;
 import com.transformtech.reminders.dto.TaskDetailDTO;
 import com.transformtech.reminders.filter.TaskDetailFilter;
 import org.springframework.data.domain.Page;
@@ -14,5 +15,5 @@ public interface ITaskDetailService {
     void deleteAllTaskDetail();
     TaskDetailDTO findById (Long id);
     List<TaskDetailDTO> findByExcutionDate();
-    Page<TaskDetailDTO> search(TaskDetailFilter filter, Pageable pageable);
+    PageResp<TaskDetailDTO> search(TaskDetailFilter filter, Pageable pageable);
 }
