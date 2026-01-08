@@ -1,13 +1,13 @@
 package com.transformtech.reminders.service.impl;
 
-import com.transformtech.reminders.resp.PageResp;
 import com.transformtech.reminders.dto.TaskDetailDTO;
 import com.transformtech.reminders.entity.TaskDetailEntity;
 import com.transformtech.reminders.filter.TaskDetailFilter;
-import com.transformtech.reminders.spec.TaskDetailSpecification;
 import com.transformtech.reminders.mapper.TaskDetailMapper;
 import com.transformtech.reminders.repository.TaskDetailRepository;
+import com.transformtech.reminders.resp.PageResp;
 import com.transformtech.reminders.service.ITaskDetailService;
+import com.transformtech.reminders.spec.TaskDetailSpecification;
 import com.transformtech.reminders.validate.TaskDetailValidate;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,12 @@ public class TaskDetailService implements ITaskDetailService {
     public TaskDetailDTO updateTaskDetail(TaskDetailDTO taskDetailDTO, Long id) {
         log.debug("Updating task detail: {}", taskDetailDTO);
         TaskDetailEntity oldTaskDetailEntity = taskDetailValidate.validateTaskDetailUpdate(id);
-        oldTaskDetailEntity = taskDetailMapper.updateToEntity(taskDetailDTO, oldTaskDetailEntity);
+        oldTaskDetailEntity.setTaskItem(taskDetailDTO.getTaskItem());
+        oldTaskDetailEntity.setPriority(taskDetailDTO.getPriority());
+        oldTaskDetailEntity.setStatus(taskDetailDTO.getStatus());
+        oldTaskDetailEntity.setDescription(taskDetailDTO.getDescription());
+        oldTaskDetailEntity.setExecutionDate(taskDetailDTO.getExecutionDate());
+        oldTaskDetailEntity.setExecutionTime(taskDetailDTO.getExecutionTime());
         taskDetailRepository.save(oldTaskDetailEntity);
         return taskDetailMapper.toDTO(oldTaskDetailEntity);
     }

@@ -11,7 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface TaskDetailRepository extends JpaRepository<TaskDetailEntity, Long> , JpaSpecificationExecutor<TaskDetailEntity> {
-    int countByTasklist_Id(Long id);
+    int countByTasklist_IdAndIsActiveTrue(Long id);
     List<TaskDetailEntity> findByExecutionDate (LocalDate date);
     List<TaskDetailEntity> findAllByIsActiveTrue();
+    List<TaskDetailEntity> findAllByTasklist_Id(Long[] id);
 }

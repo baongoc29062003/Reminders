@@ -3,10 +3,12 @@ package com.transformtech.reminders.service.impl;
 import com.transformtech.reminders.dto.TaskDTO;
 import com.transformtech.reminders.dto.TaskListDTO;
 import com.transformtech.reminders.dto.TaskOverViewDTO;
+import com.transformtech.reminders.entity.TaskDetailEntity;
 import com.transformtech.reminders.entity.TaskEntity;
 import com.transformtech.reminders.mapper.TaskMapper;
 import com.transformtech.reminders.repository.TaskDetailRepository;
 import com.transformtech.reminders.repository.TaskListRepository;
+import com.transformtech.reminders.service.ITaskDetailService;
 import com.transformtech.reminders.service.ITaskListService;
 import com.transformtech.reminders.validate.TaskValidate;
 import lombok.AllArgsConstructor;
@@ -29,6 +31,7 @@ public class TaskListService implements ITaskListService {
 
     private final TaskValidate taskValidate;
 
+    private final ITaskDetailService taskDetailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,9 +40,8 @@ public class TaskListService implements ITaskListService {
         List<TaskEntity> taskListEntity = taskListRepository.findAllByIsActiveTrue();
         List<TaskDTO> taskListDTO = taskListMapper.toDTOs(taskListEntity);
         for (TaskDTO taskDTO : taskListDTO) {
-            taskDTO.setTotalTaskItemsByTaskId(taskDetailRepository.countByTasklist_Id(taskDTO.getId()));
+            taskDTO.setTotalTaskItemsByTaskId(taskDetailRepository.countByTasklist_IdAndIsActiveTrue(taskDTO.getId()));
         }
-
         return taskListDTO;
     }
 
@@ -56,9 +58,9 @@ public class TaskListService implements ITaskListService {
     @Override
     @Transactional
     public TaskDTO updateTaskList(TaskDTO taskDTO, Long id) {
-        log.debug("Updating list of tasks{}",taskDTO);
+        log.debug("Updating list of tasks{}", taskDTO);
         TaskEntity oldTask = taskValidate.validateTaskUpdate(id);
-        oldTask = taskListMapper.updateEntity(oldTask, taskDTO);
+        oldTask.setName(taskDTO.getName());
         taskListRepository.save(oldTask);
         return taskListMapper.toDTO(oldTask);
     }
@@ -67,6 +69,13 @@ public class TaskListService implements ITaskListService {
     @Transactional
     public void deleteTaskList(Long[] ids) {
         log.debug("Deleting list of tasks");
+        List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllByTasklist_Id(ids);
+        taskDetailEntities
+                .stream()
+                .forEach(taskDetailEntity -> {
+                    taskDetailEntity.setActive(false);
+                    taskDetailRepository.save(taskDetailEntity);
+                });
         List<TaskEntity> taskEntities = taskListRepository.findAllById(Arrays.asList(ids));
         taskEntities
                 .stream()
@@ -81,6 +90,8 @@ public class TaskListService implements ITaskListService {
     @Override
     @Transactional
     public void deleteAllTaskList() {
+        log.debug("Deleting list of tasks");
+        taskDetailService.deleteAllTaskDetail();
         List<TaskEntity> taskEntities = taskListRepository.findAllByIsActiveTrue();
         taskEntities
                 .stream()
@@ -101,8 +112,7 @@ public class TaskListService implements ITaskListService {
             TaskListDTO taskListDTO = taskListMapper.convertDTO(taskEntity);
             taskListDTO.setTaskDTO(setTotalTaskDetailItemsByTaskId(taskEntity, id));
             return taskListDTO;
-        }
-        else return null;
+        } else return null;
     }
 
     @Override
@@ -123,7 +133,7 @@ public class TaskListService implements ITaskListService {
 
     public TaskDTO setTotalTaskDetailItemsByTaskId(TaskEntity taskEntity, Long id) {
         TaskDTO taskDTO = taskListMapper.toDTO(taskEntity);
-        taskDTO.setTotalTaskItemsByTaskId(taskDetailRepository.countByTasklist_Id(id));
+        taskDTO.setTotalTaskItemsByTaskId(taskDetailRepository.countByTasklist_IdAndIsActiveTrue(id));
         return taskDTO;
     }
 

@@ -2,6 +2,8 @@ package com.transformtech.reminders.dto;
 
 
 
+import com.transformtech.reminders.enums.Priority;
+import com.transformtech.reminders.enums.Status;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -19,8 +21,8 @@ public class TaskDetailDTO extends AbstractDTO {
     private LocalTime executionTime;
     @NotNull
     private Long tasklistId;
-    private String status;
-    private String priority;
+    private Status status;
+    private Priority priority;
     private String description;
 
 
