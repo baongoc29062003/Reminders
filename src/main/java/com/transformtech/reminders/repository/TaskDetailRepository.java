@@ -14,5 +14,5 @@ public interface TaskDetailRepository extends JpaRepository<TaskDetailEntity, Lo
     int countByTasklist_IdAndIsActiveTrue(Long id);
     List<TaskDetailEntity> findByExecutionDate (LocalDate date);
     List<TaskDetailEntity> findAllByIsActiveTrue();
-    List<TaskDetailEntity> findAllByTasklist_Id(Long[] id);
+    List<TaskDetailEntity> findAllByTasklist_IdIn(List<Long> id);
 }

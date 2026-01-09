@@ -48,7 +48,7 @@ public class TaskListAPI {
     }
 
     @DeleteMapping("/api/tasklist")
-    void deleteTasklist(@RequestParam(value = "ids") Long[] ids) {
+    void deleteTasklist(@RequestParam(value = "ids") List<Long> ids) {
         log.info("Deleting task list: {}", ids);
         taskListService.deleteTaskList(ids);
     }

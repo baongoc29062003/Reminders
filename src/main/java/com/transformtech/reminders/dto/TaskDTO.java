@@ -10,8 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskDTO extends AbstractDTO {
-
     private String name;
     private int totalTaskItemsByTaskId;
-
 }

@@ -58,11 +58,10 @@ public class TaskDetailService implements ITaskDetailService {
 
     @Override
     @Transactional
-    public void deleteTaskDetail(Long[] ids) {
+    public void deleteTaskDetail(List<Long> ids) {
         log.debug("Deleting task details: {}", Arrays.asList(ids));
-        List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllById(Arrays.asList(ids));
+        List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllById(ids);
         taskDetailEntities
-                .stream()
                 .forEach(taskDetailEntity ->
                 {
                     taskDetailEntity.setActive(false);
@@ -76,7 +75,6 @@ public class TaskDetailService implements ITaskDetailService {
         log.debug("Deleting all task details");
         List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllByIsActiveTrue();
         taskDetailEntities
-                .stream()
                 .forEach(taskDetailEntity ->
                 {
                     taskDetailEntity.setActive(false);

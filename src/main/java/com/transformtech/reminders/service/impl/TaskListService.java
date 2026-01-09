@@ -5,6 +5,8 @@ import com.transformtech.reminders.dto.TaskListDTO;
 import com.transformtech.reminders.dto.TaskOverViewDTO;
 import com.transformtech.reminders.entity.TaskDetailEntity;
 import com.transformtech.reminders.entity.TaskEntity;
+import com.transformtech.reminders.enums.ErrorCode;
+import com.transformtech.reminders.exception.ResourceNotFoundException;
 import com.transformtech.reminders.mapper.TaskMapper;
 import com.transformtech.reminders.repository.TaskDetailRepository;
 import com.transformtech.reminders.repository.TaskListRepository;
@@ -16,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -67,18 +68,16 @@ public class TaskListService implements ITaskListService {
 
     @Override
     @Transactional
-    public void deleteTaskList(Long[] ids) {
+    public void deleteTaskList(List<Long> ids) {
         log.debug("Deleting list of tasks");
-        List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllByTasklist_Id(ids);
+        List<TaskDetailEntity> taskDetailEntities = taskDetailRepository.findAllByTasklist_IdIn(ids);
         taskDetailEntities
-                .stream()
                 .forEach(taskDetailEntity -> {
                     taskDetailEntity.setActive(false);
                     taskDetailRepository.save(taskDetailEntity);
                 });
-        List<TaskEntity> taskEntities = taskListRepository.findAllById(Arrays.asList(ids));
+        List<TaskEntity> taskEntities = taskListRepository.findAllById(ids);
         taskEntities
-                .stream()
                 .forEach(taskEntity ->
                         {
                             taskEntity.setActive(false);
@@ -94,7 +93,6 @@ public class TaskListService implements ITaskListService {
         taskDetailService.deleteAllTaskDetail();
         List<TaskEntity> taskEntities = taskListRepository.findAllByIsActiveTrue();
         taskEntities
-                .stream()
                 .forEach(taskEntity ->
                 {
                     taskEntity.setActive(false);
@@ -107,7 +105,7 @@ public class TaskListService implements ITaskListService {
     public TaskListDTO getTaskListById(Long id) {
         log.debug("Retrieving list of tasks by id {}", id);
         TaskEntity taskEntity = taskListRepository.findAllByIdAndIsActiveTrue(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy id"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.TASK_NOT_FOUND));
         if (taskEntity.isActive()) {
             TaskListDTO taskListDTO = taskListMapper.convertDTO(taskEntity);
             taskListDTO.setTaskDTO(setTotalTaskDetailItemsByTaskId(taskEntity, id));

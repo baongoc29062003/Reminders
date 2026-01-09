@@ -12,6 +12,4 @@ import java.util.List;
 public class TaskListDTO {
     private TaskDTO taskDTO;
     private List<TaskDetailDTO> taskDetails;
-
-
 }

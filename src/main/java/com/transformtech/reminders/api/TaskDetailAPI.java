@@ -34,7 +34,7 @@ public class TaskDetailAPI {
     }
 
     @DeleteMapping("/api/taskdetail")
-    public void deleteTaskDetail(@RequestParam(value = "ids") Long[] ids) {
+    public void deleteTaskDetail(@RequestParam(value = "ids") List<Long> ids) {
         log.info("Deleting task detail: {}", ids);
         taskDetailService.deleteTaskDetail(ids);
     }

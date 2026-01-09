@@ -10,7 +10,7 @@ import java.util.List;
 public interface ITaskDetailService {
     TaskDetailDTO saveTaskDetail (TaskDetailDTO taskDetailDTO);
     TaskDetailDTO updateTaskDetail (TaskDetailDTO taskDetailDTO, Long id);
-    void deleteTaskDetail(Long[] ids);
+    void deleteTaskDetail(List<Long> ids);
     void deleteAllTaskDetail();
     TaskDetailDTO findById (Long id);
     List<TaskDetailDTO> findByExcutionDate();

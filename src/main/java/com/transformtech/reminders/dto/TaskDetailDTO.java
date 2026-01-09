@@ -24,6 +24,4 @@ public class TaskDetailDTO extends AbstractDTO {
     private Status status;
     private Priority priority;
     private String description;
-
-
 }

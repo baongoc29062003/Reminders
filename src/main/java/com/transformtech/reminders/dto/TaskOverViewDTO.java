@@ -11,5 +11,4 @@ import java.util.List;
 public class TaskOverViewDTO {
     private long totalTaskItem;
     List<TaskListDTO> taskListDTOS;
-
 }

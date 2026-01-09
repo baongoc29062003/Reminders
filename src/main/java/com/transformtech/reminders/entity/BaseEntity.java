@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 
-
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
@@ -18,11 +17,11 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name ="crateddate")
+    @Column(name = "crateddate")
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @Column(name ="modifieddate")
+    @Column(name = "modifieddate")
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
